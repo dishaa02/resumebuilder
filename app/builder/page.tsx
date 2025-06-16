@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { useSearchParams } from 'next/navigation'
@@ -245,6 +245,14 @@ const transformFormData = (values: any) => {
 };
 
 export default function Builder() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BuilderContent />
+    </Suspense>
+  );
+}
+
+function BuilderContent() {
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState(initialValues)
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
