@@ -6,17 +6,30 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
   id               String    @id @default(cuid())
   email            String    @unique
-  username         String    @unique
-  password         String
+  username         String?   @unique
+  password         String?
+  fullName         String?
+  authProvider     String?   @default("credentials")
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   resetToken       String?
   resetTokenExpiry DateTime?
+  resumes          Resume[]
+}
+
+model Resume {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 } 
